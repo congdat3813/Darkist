@@ -5,7 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:localstore/localstore.dart';
-import 'package:tsk/model.dart';
+import 'package:tsk/models/model.dart';
 
 import 'package:tsk/screens/screens.dart';
 
@@ -24,32 +24,41 @@ class _TaskListState extends State<TaskList> {
   late DateTime time;
   @override
   void initState() {
+    // _db.collection('TaskLists').get().then((value) {
+    //   setState(() {
+    //       final item = Tasks.fromMap(value!);
+    //       _items.putIfAbsent(item.name, () => item);
+    //   });
+    // });
     _subscription = _db.collection('TaskLists').stream.listen((event) {
       setState(() {
         final item = Tasks.fromMap(event);
         _items.putIfAbsent(item.name, () => item);
       });
     });
-    if (kIsWeb) _db.collection('TaskLists').stream.asBroadcastStream();
+    // if (kIsWeb) _db.collection('TaskLists').stream.asBroadcastStream();
 
     super.initState();
     time = DateTime.now();
   }
 
-  FutureOr onGoBack(dynamic value, Tasks item) {
-    if(value) {
-      setState(() {
-        item.delete();
-        _items.remove(item.name);
-      });
-    }
-    else {
+  FutureOr onGoBack(Tasks item) {
+    // if(value) {
+    //   print('value');
+    //   setState(() {
+        
+    //     item.delete();
+    //     _items.remove(item.name);
+    //   });
+    // }
+    // else {
+      print('value 1');
       Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (BuildContext context) {
           return const Homepage(index: 0);
         })
       );
-    }
+    // }
   }
 
   @override
@@ -159,7 +168,9 @@ class _TaskListState extends State<TaskList> {
             return InkWell(
               onTap: () {
                 Route route = MaterialPageRoute(builder: (context) => ItemDetail(item: item));
-                Navigator.push(context, route).then((value) => onGoBack(value, item));
+                Navigator.push(context, route).then((_){
+                  onGoBack(item);
+                });
               },
               child: Container(
                   width: 220,

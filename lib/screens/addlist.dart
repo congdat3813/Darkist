@@ -5,7 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:localstore/localstore.dart';
-import 'package:tsk/model.dart';
+import 'package:tsk/models/model.dart';
 
 class AddList extends StatefulWidget {
   const AddList({Key? key}) : super(key: key);

@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:localstore/localstore.dart';
 
-import 'package:tsk/model.dart';
+import 'package:tsk/models/model.dart';
 
 
 class ItemDetail extends StatefulWidget {
@@ -34,6 +34,28 @@ class _ItemDetailState extends State<ItemDetail> {
 
   @override
   void initState() {
+    // _db.collection('TaskLists').get().then((value) {
+    //   setState(() {
+    //       final item = Tasks.fromMap(value!);
+    //       _items.putIfAbsent(item.name, () => item);
+    //     if (widget.item.items.isEmpty) {
+    //       count=0;
+    //       progress = 0;
+    //     }
+    //     else {
+    //       int countDone = 0;
+    //       for (var ele in widget.item.items){
+    //         if (ele.values.toList().first) countDone++;
+    //       }
+    //       count= countDone;
+    //       progress = countDone / widget.item.items.length;
+    //     }
+    //     pickerColor= Color(widget.item.curcolor);
+    //     currentColor= Color(widget.item.curcolor);
+    //   });
+    // });
+    pickerColor= Color(widget.item.curcolor);
+    currentColor= Color(widget.item.curcolor);
     _subscription = _db.collection('TaskLists').stream.listen((event) {
       setState(() {
         final item = Tasks.fromMap(event);
@@ -50,12 +72,11 @@ class _ItemDetailState extends State<ItemDetail> {
           count= countDone;
           progress = countDone / widget.item.items.length;
         }
-        pickerColor= Color(widget.item.curcolor);
-        currentColor= Color(widget.item.curcolor);
+
       });
     });
 
-    if (kIsWeb) _db.collection('TaskLists').stream.asBroadcastStream();
+    // if (kIsWeb) _db.collection('TaskLists').stream.asBroadcastStream();
     super.initState();
   }
   
@@ -266,7 +287,7 @@ class _ItemDetailState extends State<ItemDetail> {
                   value: widget.item.items[index].values.toList().first, 
                   onChanged: (bool? value) {
                     setState(() {
-                      widget.item.updateTask(index, !widget.item.items[index].values.toList().first);
+                      widget.item.updateTask(index, !widget.item.items[index].values.toList().first, currentColor.value);
                     });
                   }
                 ),
@@ -303,7 +324,7 @@ class _ItemDetailState extends State<ItemDetail> {
       actions: [
         ElevatedButton(
           onPressed: () {
-            widget.item.addTask({myController.text: false});
+            widget.item.addTask({myController.text: false},currentColor.value);
             Navigator.pop(context, 'OK');
           }, 
           child: const Text('Add'),

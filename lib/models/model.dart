@@ -5,9 +5,9 @@ import 'package:localstore/localstore.dart';
 
 class Tasks {
   final String name;
-  List<dynamic> items;
-  int curcolor;
-  bool status;
+  final List<dynamic> items;
+  final int curcolor;
+  final bool status;
 
   Tasks(
       {
@@ -47,7 +47,7 @@ extension ExtTasks on Tasks {
     return _db.collection('TaskLists').doc(name).delete();
   }
 
-  Future addTask(Map<String, bool> task) async {
+  Future addTask(Map<String, bool> task, int color) async {
     final _db = Localstore.instance;
 
     items.add(task);
@@ -57,7 +57,7 @@ extension ExtTasks on Tasks {
           name: name, 
           items: items, 
           status: status,
-          curcolor: curcolor
+          curcolor: color
         );
     return _db.collection('TaskLists').doc(name).set(item.toMap());
   }
@@ -67,6 +67,7 @@ extension ExtTasks on Tasks {
     items.remove(items[index]);
 
     bool stt = true;
+    
     if (items.isEmpty) {
       stt = false;
     } else     
@@ -88,7 +89,7 @@ extension ExtTasks on Tasks {
     return _db.collection('TaskLists').doc(name).set(item.toMap());
   }
 
-  Future updateTask(int index, bool status) async {
+  Future updateTask(int index, bool status, int color) async {
     final _db = Localstore.instance;
     
     String taskname = items[index].keys.toList().first;
@@ -109,7 +110,7 @@ extension ExtTasks on Tasks {
           name: name, 
           items: items, 
           status: stt, 
-          curcolor: curcolor
+          curcolor: color
           );
     return _db.collection('TaskLists').doc(name).set(item.toMap());
   }
